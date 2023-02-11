@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Counter() {
   const [counter, setCounter] = useState(0);
 
-  console.log("hellow");
-  //   useEffect(() => {
-  //     console.log("Hellow");
+    useEffect(() => {
+      console.log("Hellow");
 
-  //     return () => {
-  //       console.log("");
-  //     };
-  //   }, [counter]);
+      return () => {
+        console.log("");
+      };
+    }, [counter]);
 
   return (
     <>
