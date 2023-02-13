@@ -1,6 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 export default function FetchData() {
+  // Untuk nampilin Data api KeUI Browser
+  const [news, setNews] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  // console.log(news);
+  // console.log(news);
   //Contoh ke 1
   // useEffect(() => {
   //   const api = fetch("https://api.spaceflightnewsapi.net/v3/blogs")
@@ -25,15 +30,43 @@ export default function FetchData() {
 
   useEffect(() => {
     const getApiSpaceFlight = async () => {
+      setIsLoading(true);
       const result = await axios.get(
         "https://api.spaceflightnewsapi.net/v3/blogs"
         // Disini get memiliki 2 parameter yang pertama url, yang kedua headres jika membutuhkan
         // sedangkan kalo post itu memiliki bisa 3 paramater yaitu: url, headers dan  payloadnya
       );
-      console.log(result.data);
+      // console.log(result.data);
+      setNews(result.data);
     };
     getApiSpaceFlight();
-  });
+  }, []);
 
-  return <div>fetchData</div>;
+  return (
+    <>
+      {isLoading
+        ? news.map((data) => {
+            return (
+              <>
+                <div
+                  key={data.id}
+                  style={{
+                    border: "solid 1px black",
+                    width: "50%",
+                    textAlign: "center",
+                    margin: "10px auto",
+                    alignItems: "center",
+                  }}
+                >
+                  <p> title :{data.title}</p>
+                  <p> url :{data.url}</p>
+                  <p> newsSite :{data.newsSite}</p>
+                  <p> summary :{data.summary}</p>
+                </div>
+              </>
+            );
+          })
+        : "Loading"}
+    </>
+  );
 }
