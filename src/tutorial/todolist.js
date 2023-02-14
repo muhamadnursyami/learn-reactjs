@@ -6,14 +6,18 @@ export default function Todolist() {
   // state untuk  memasukan data acitivitnya kedalam array supaya biisa menamping lebih banyak
   const [edit, setEdit] = useState({});
   const [todo, setTodo] = useState([]);
+  const [message, setMessage] = useState("");
   //Memiliki dua fungsi yang 1 menambahkan yang 2 edit.
   const handleSave = (e) => {
     // supaya browser tidak realod ketika mensubmit
     e.preventDefault();
+
+    if (!activityOnchange) return setMessage("Isi Dong bang !!");
+    setMessage("");
     if (edit.id) {
       // Jika ada idnya maka kita buat object baru
       const updateTodo = {
-        id: edit.id,
+        ...todo,
         activityOnchange,
       };
       // setelah itu kita harus cari index keberapa yang kita edit, didalam state todo
@@ -28,6 +32,7 @@ export default function Todolist() {
       // yang telah di edit.
       setUpdateTodo[updateTodoIndex] = updateTodo;
       // terus kita masukan
+
       setTodo(setUpdateTodo);
       return handleCancel();
       // console.log(updateTodoIndex);
@@ -36,10 +41,11 @@ export default function Todolist() {
     // disini kita mengekstark array todonya kemudia kita masukan array yang sudah di ekstak
     // dengan isi value dari activityOnchange  menggunakan spreadOperator, ilustrasinya todo mencopy data dari activyonchange
     // ingin membuat id dengan waktu. kita masukan kedalam object
-    setTodo([...todo, { id: Date.now(), activityOnchange }]);
+    setTodo([...todo, { id: Date.now(), activityOnchange, ceklis: false }]);
     // disini setelah di sumbit, makan inputonchangenya di kosongkan kembali
     // note : di inputnya harus diberikan value={activityOnchange} supaya inputan tersebut
     // bergantung di state activityonchange tidak bergantung di internal nodenya.
+    setMessage("");
     setActivityOnChange("");
   };
   //   Ambil onchangenya
@@ -81,10 +87,26 @@ export default function Todolist() {
     // kita kososngkan onchangenya
     setActivityOnChange("");
   };
+
+  const handleCeklis = (td) => {
+    const ceklisUpdate = {
+      ...td,
+      ceklis: td.ceklis ? false : true,
+    };
+    const indexTodoState = todo.findIndex((todoIndex) => {
+      return td.id === todoIndex.id;
+    });
+
+    const updateTodoCeklis = [...todo];
+    updateTodoCeklis[indexTodoState] = ceklisUpdate;
+    // console.log(ceklisUpdate);
+    setTodo(updateTodoCeklis);
+  };
   return (
     <>
       <div className="parentTodoList">
         <h3>Todo list</h3>
+        {message}
         <form onSubmit={handleSave}>
           <input type="text" value={activityOnchange} onChange={handleChange} />
           <button type="submit">
@@ -92,21 +114,35 @@ export default function Todolist() {
           </button>
           {edit.id && <button onClick={handleCancel}>batal</button>}
         </form>
-        <ul>
-          {todo.map((todo) => {
-            return (
-              <>
-                <li key={todo.id}>
-                  {todo.activityOnchange}
-                  <button onClick={handleEdit.bind(this, todo)}>edit</button>
-                  <button onClick={handleDelete.bind(this, todo.id)}>
-                    delete
-                  </button>
-                </li>
-              </>
-            );
-          })}
-        </ul>
+        {todo.length > 0 ? (
+          <ul>
+            {todo.map((todo) => {
+              return (
+                <>
+                  <li key={todo.id}>
+                    <input
+                      type="checkbox"
+                      checked={todo.ceklis}
+                      onChange={handleCeklis.bind(this, todo)}
+                    />
+                    {todo.ceklis ? (
+                      <strike>{todo.activityOnchange}</strike>
+                    ) : (
+                      todo.activityOnchange
+                    )}
+                    ({todo.ceklis ? "Selesai" : "belum selesai"})
+                    <button onClick={handleEdit.bind(this, todo)}>edit</button>
+                    <button onClick={handleDelete.bind(this, todo.id)}>
+                      delete
+                    </button>
+                  </li>
+                </>
+              );
+            })}
+          </ul>
+        ) : (
+          <p> data kosong</p>
+        )}
       </div>
     </>
   );
