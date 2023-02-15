@@ -1,6 +1,8 @@
 import { Link, Route, Routes } from "react-router-dom";
 import "./App.css";
 import About from "./tutorial/react-router-dom/About";
+import Blog from "./tutorial/react-router-dom/Blog";
+import BlogDetail from "./tutorial/react-router-dom/BlogDetail";
 import Categories from "./tutorial/react-router-dom/Categories";
 // import ComponentProps from "./tutorial/components&props";
 // import Counter from "./tutorial/counter";
@@ -8,6 +10,7 @@ import Categories from "./tutorial/react-router-dom/Categories";
 // import Todolist from "./tutorial/todolist";
 // import StateManagement from "./tutorial/useState&useEffect";
 import Home from "./tutorial/react-router-dom/Home";
+import NotFound from "./tutorial/react-router-dom/NotFound";
 
 function App() {
   return (
@@ -35,6 +38,11 @@ function App() {
         <Route path="about" element={<About />}>
           <Route path="categories" element={<Categories />} />
         </Route>
+        {/*   Penggunaakn url Params */}
+        <Route path="blog" element={<Blog />} />
+        <Route path="blog/:id" element={<BlogDetail />} />
+        {/* Penggunaan URL yang nggak ada di route kamu */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
